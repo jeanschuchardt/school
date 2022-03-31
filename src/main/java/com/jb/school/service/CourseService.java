@@ -2,12 +2,11 @@ package com.jb.school.service;
 
 import com.jb.school.dto.BulkCreationDTO;
 import com.jb.school.dto.CourseDTO;
+import com.jb.school.dto.CourseMapper;
 import com.jb.school.dto.CreateCourseAndTeacherDTO;
 import com.jb.school.entity.Course;
 import com.jb.school.entity.Teacher;
 import com.jb.school.repository.CourseRepository;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,11 +41,13 @@ public class CourseService {
     public List<CourseDTO> getAll() {
         List<Course> all = courseRepository.findAll();
 
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT).setSkipNullEnabled(true);
-        List<CourseDTO> CourseDTO = all.stream().map(x -> mapper.map(x, CourseDTO.class)).collect(Collectors.toList());
+//        ModelMapper mapper = new ModelMapper();
+//        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT).setSkipNullEnabled(true);
+//        List<CourseDTO> CourseDTO = all.stream().map(x -> mapper.map(x, CourseDTO.class)).collect(Collectors.toList());
 
-        return CourseDTO;
+        List<CourseDTO> collect = all.stream().map(x -> CourseMapper.INSTANCE.courseDTO(x)).collect(Collectors.toList());
+
+        return collect;
     }
 
     public Course createCourseAndTeacher(CreateCourseAndTeacherDTO createCourseAndTeacherDTO) {
